@@ -1,5 +1,5 @@
 # PriceConverter
-Aplicación Android para calcular el precio de un producto sin el IVA aplicado, descuentos y cambio de moneda.
+![img](https://github.com/josejapch/PriceConverter/blob/master/app/src/main/res/mipmap-xxxhdpi/pc_icon.png)
 
 ## 1. Sobre la aplicación.
 Se trata de una aplicación Android para calcular el precio de un producto sin el IVA aplicado, descuentos y cambio de moneda. 

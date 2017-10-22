@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Price Converter</string>
+    <string name="text_noiva">Importe sin IVA: </string>
+</resources>

@@ -6,16 +6,16 @@ import java.util.HashMap;
  * Clase con las operaciones necesarias para realizar los cálculos requeridos por la aplicación.
  */
 
-public class ModelSheet {
+class ModelSheet {
 
-    double amount = 0.00;
-    double discount = 0.00;
-    double ch_eu = 0.00;
-    double ch_usd = 0.00;
-    double ch_pound = 0.00;
-    double gbp_value = 0.0;
-    double usd_value = 0.0;
-    double iva = 21;
+    private double amount = 0.00;
+    private double discount = 0.00;
+    private double ch_eu = 0.00;
+    private double ch_usd = 0.00;
+    private double ch_pound = 0.00;
+    private double gbp_value = 0.0;
+    private double usd_value = 0.0;
+    private double iva = 21;
 
     /**
      * Constructor
@@ -108,7 +108,7 @@ public class ModelSheet {
      */
     public HashMap<String,String> getCoinChange (int option, double d){
 
-        HashMap<String,String> result = new HashMap<String, String>();
+        HashMap<String,String> result = new HashMap<>();
 
         switch (option){
             case 0:

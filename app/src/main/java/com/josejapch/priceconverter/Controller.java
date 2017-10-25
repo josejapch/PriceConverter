@@ -1,18 +1,12 @@
 package com.josejapch.priceconverter;
 
-import android.content.Context;
-import android.util.Log;
-import android.util.Pair;
-
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Clase intermediaria para la comunicación entre la interfaz (MainActivity) y la clase con las
  * operaciones necesarias para hacer los cálculos (ModelSheet).
  */
-public class Controller {
+class Controller {
 
 
     private ModelSheet sheet;
@@ -20,18 +14,18 @@ public class Controller {
     /**
      * Constructor
      */
-    public Controller(){
+    Controller(){
 
         sheet = new ModelSheet();
     }
 
     /**
      * Método para la obtención del texto con el cálculo del importe sin IVA.
-     * @param amount Importe
-     * @param iva IVA aplicado al importe
-     * @return
+     * @param amount Importe.
+     * @param iva IVA aplicado al importe.
+     * @return Importe sin IVA en formato texto.
      */
-    public String getTextNoIVA(String amount, int iva){
+    String getTextNoIVA(String amount, int iva){
 
         if (!amount.isEmpty()){
             sheet.setAmount(Double.parseDouble(amount));
@@ -50,12 +44,13 @@ public class Controller {
 
     /**
      * Método para la obtención del texto con el cálculo del descuento sobre el importe.
-     * @param sDiscount
-     * @return
+     * @param sDiscount Porcentaje de descuento.
+     * @return Importe con descuento y símbolo de Euro en formato texto o error si se introduce un
+     * porcentaje de descuento no válido.
      */
-    public String getTextDiscount(String sDiscount){
+    String getTextDiscount(String sDiscount){
 
-        String result="";
+        String result;
 
         if (!sDiscount.isEmpty()){
 
@@ -79,13 +74,11 @@ public class Controller {
      * Método para obtener los valores del cambio de moneda según el tipo de moneda que se inserte.
      * @param option Tipo de moneda del importe.
      * @param sAmount Importe.
-     * @return
+     * @return Valores del cambio de moneda.
      */
-    public HashMap<String,String> getChangeValues(int option, String sAmount){
+    HashMap<String,String> getChangeValues(int option, String sAmount){
 
-        HashMap<String,String> values = sheet.getCoinChange(option,Double.parseDouble(sAmount));
-
-        return values;
+        return sheet.getCoinChange(option,Double.parseDouble(sAmount));
     }
 
     /**
@@ -93,7 +86,7 @@ public class Controller {
      * @param gbp Valor de la libra.
      * @param usd Valor del dolar.
      */
-    public void setCoinValues(double gbp, double usd){
+    void setCoinValues(double gbp, double usd){
 
         sheet.setGBPvalue(gbp);
         sheet.setUsd_value(usd);
@@ -103,5 +96,5 @@ public class Controller {
      * Método para obtener la instancia de la clase ModelSheet sobre la que se está operando.
      * @return Instancia de ModelSheet.
      */
-    public ModelSheet getSheet(){ return sheet; }
+    ModelSheet getSheet(){ return sheet; }
 }

@@ -1,13 +1,17 @@
 package com.josejapch.priceconverter;
 
+import android.Manifest;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -36,6 +40,8 @@ import java.util.HashMap;
  *
  * */
 public class MainActivity extends AppCompatActivity {
+
+    static final int MY_PERMISSIONS_REQUEST_INTERNET = 1;
 
     Spinner lista_iva;
     String[] iva ={"IVA General (21%)", "IVA Reducido (10%)", "IVA superreducido (4%)"};
@@ -80,6 +86,45 @@ public class MainActivity extends AppCompatActivity {
 
         layout_Cambio.setVisibility(View.INVISIBLE);
 
+        int permissionCheck = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.INTERNET);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.INTERNET)) {
+
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Permiso requerido")
+                        .setMessage("Se requiere permiso de acceso a internet para el cambio de moneda.")
+                        .setPositiveButton("Permitir", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ActivityCompat.requestPermissions(MainActivity.this,
+                                        new String[]{Manifest.permission.INTERNET},
+                                        MY_PERMISSIONS_REQUEST_INTERNET);
+
+
+                            }
+
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                                finish();
+                            }
+                        })
+                        .show();
+            } else {
+
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[]{Manifest.permission.INTERNET},
+                        MY_PERMISSIONS_REQUEST_INTERNET);
+            }
+        }
+
         controller = new Controller();
 
         URLConnectionJson urlCon = new URLConnectionJson();
@@ -91,6 +136,22 @@ public class MainActivity extends AppCompatActivity {
 
         show_noIVA();
         show_descuento();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_INTERNET: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    URLConnectionJson urlCon = new URLConnectionJson();
+                    urlCon.execute();
+
+                }
+            }
+        }
     }
 
     /**
@@ -143,7 +204,6 @@ public class MainActivity extends AppCompatActivity {
 
             texto_descuento.setText(textDiscount);
         }
-        Log.e("SHDESCUENTO:", textDiscount);
     }
 
     /**
@@ -151,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
      */
     protected void createInterfazSpinners(){
 
-        ArrayAdapter<String> iva_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,iva);
+        ArrayAdapter<String> iva_adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,iva);
         lista_iva.setAdapter(iva_adapter);
 
         lista_iva.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -166,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ArrayAdapter<String> cambio_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,monedas);
+        ArrayAdapter<String> cambio_adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,monedas);
         lista_monedas.setAdapter(cambio_adapter);
 
         lista_monedas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -269,7 +329,7 @@ public class MainActivity extends AppCompatActivity {
      * Clase para realizar la conexión (asíncrona) a la API encargada de suministrar el valor
      * actualizado de la moneda.
      */
-    protected class URLConnectionJson extends AsyncTask<String,Void,String>{
+    private class URLConnectionJson extends AsyncTask<String,Void,String>{
 
         HttpURLConnection urlConnection;
 
